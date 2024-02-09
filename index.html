@@ -8,10 +8,14 @@
 </head>
 
 <body>
+  <div id="loader"></div>
   <div id="directions">
+    <div id="intro">
      <p> In this experiment, you are asked to judge what is the percent of a smaller value to a larger value in several charts. 
       We won’t record any other information from you except your answers and the time it takes you to answer. 
-      Click the “agree” button to begin. Thank you!<button id="agree">Agree</button></p>
+      Click the “agree” button to begin. Thank you!</p>
+      <button id="agree">Agree</button>
+    </div>
   </div>
   <div id="svgcontainer"></div>
   <div class="ui">
@@ -28,7 +32,7 @@
     id="result-form"
     method="POST"
     action="https://script.google.com/macros/s/AKfycbzVUg7hS88GXI6CggvJ2f_cj3kdq_tzW_SeqkfA1Mr_NyFan9dE3YbdXJZpy4l2FSOR/exec"
-    onsubmit="next.click()">
+    onsubmit="">
       
       <input name="Id" type="hidden" id="idString">
       <input type="range" id="percent" name="vol" min="0" max="100" oninput="syncInputs(this.value);">
@@ -38,7 +42,7 @@
       <input name="Point1" type="hidden" id="point1" value="0">
       <input name="Point2" type="hidden" id="point2" value="0">
       <input name="Error" type="hidden" id="error", value="0">
-      <input type="submit">
+      <input type="submit" id="submit">
     </form>
   </div>
 </body>
@@ -423,18 +427,24 @@
     }
 
     window.addEventListener("load", function() {
+      const loader = document.getElementById("loader")
       const form = document.getElementById('result-form');
       form.addEventListener("submit", function(e) {
         e.preventDefault();
+        document.body.style.pointerEvents="none"
         const data = new FormData(form);
         const action = e.target.action;
+        form.ge
+        loader.style.display = "block"
         fetch(action, {
           method: 'POST',
           body: data,
         })
-        /*.then(() => {
-          alert("Success!");
-        })*/
+        .then(() => {
+          document.body.style.pointerEvents="auto"
+          loader.style.display = "none"
+          next.click()
+        })
       });
     });
 
